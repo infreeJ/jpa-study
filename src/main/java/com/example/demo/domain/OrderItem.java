@@ -25,15 +25,13 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private List<Item> item = new ArrayList<>();
+    private Item item;
 
     @Column
-    private List<Integer> count = new ArrayList<>();
+    private Integer count;
 
     @Column
-    private List<Integer> orderPrice = new ArrayList<>();
+    private Integer orderPrice;
 
-    @Column
-    private int totalPrice;
 
 }

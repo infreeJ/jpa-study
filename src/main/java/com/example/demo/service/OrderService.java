@@ -12,6 +12,9 @@ import com.example.demo.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -25,24 +28,34 @@ public class OrderService {
 
         Member member = memberRepository.findById(orderRequest.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
-
-        Item item = itemRepository.findById(orderRequest.getItemId())
-                .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
-
+        
         Order order = Order.builder()
                 .member(member)
+                .totalPrice(0)
                 .build();
 
-        int orderPrice = orderRequest.getCount() * item.getPrice();
 
-        OrderItem orderItem = OrderItem.builder()
-                .order(order)
-                .item(item)
-                .orderPrice(orderPrice)
-                .count(orderRequest.getCount())
-                .build();
 
+        int totalPrice = 0;
+
+        for (int i = 0; i < orderRequest.getItemId().size(); i++) {
+            Item item = itemRepository.findById(orderRequest.getItemId().get(i))
+                    .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
+
+            int orderPrice = orderRequest.getCount().get(i) * item.getPrice();
+            totalPrice += orderPrice;
+
+            OrderItem orderItem = OrderItem.builder()
+                    .order(order)
+                    .item(item)
+                    .orderPrice(orderPrice)
+                    .count(orderRequest.getCount().get(i))
+                    .build();
+
+            orderItemRepository.save(orderItem);
+        }
+
+        order.setTotalPrice(totalPrice);
         orderRepository.save(order);
-        orderItemRepository.save(orderItem);
     }
 }

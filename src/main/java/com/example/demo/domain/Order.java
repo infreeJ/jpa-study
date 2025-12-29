@@ -25,6 +25,9 @@ public class Order {
     private Member member;
 
     @Column
+    private int totalPrice;
+
+    @Column
     @CreatedDate
     private LocalDateTime orderDate;
 
