@@ -27,6 +27,7 @@ public class Order {
     private Member member;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @Column
@@ -45,4 +46,6 @@ public class Order {
         this.orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
+
+
 }

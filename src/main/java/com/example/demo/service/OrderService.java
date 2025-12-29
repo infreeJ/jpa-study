@@ -7,10 +7,10 @@ import com.example.demo.domain.OrderItem;
 import com.example.demo.dto.request.OrderRequest;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.MemberRepository;
-import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,9 +18,9 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
-    private final OrderItemRepository orderItemRepository;
     private final ItemRepository itemRepository;
 
+    @Transactional
     public void order(OrderRequest orderRequest) {
 
         Member member = memberRepository.findById(orderRequest.getMemberId())
@@ -48,7 +48,7 @@ public class OrderService {
                     .count(orderRequest.getCount().get(i))
                     .build();
 
-            orderItemRepository.save(orderItem);
+            order.addOrderItem(orderItem);
         }
 
         order.setTotalPrice(totalPrice);
