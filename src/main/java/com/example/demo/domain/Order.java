@@ -2,6 +2,7 @@ package com.example.demo.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -24,9 +25,14 @@ public class Order {
     private Member member;
 
     @Column
+    private int totalPrice;
+
+    @Column
     @CreatedDate
     private LocalDateTime orderDate;
 
     @Column
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Status status = Status.PAYMENT;
 }
