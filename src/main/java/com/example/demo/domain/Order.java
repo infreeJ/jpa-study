@@ -40,4 +40,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Status status = Status.PAYMENT;
+
+    public void addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
 }
