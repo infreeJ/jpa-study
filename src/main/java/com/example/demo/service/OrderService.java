@@ -12,9 +12,6 @@ import com.example.demo.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -33,7 +30,6 @@ public class OrderService {
                 .member(member)
                 .totalPrice(0)
                 .build();
-
 
 
         int totalPrice = 0;
