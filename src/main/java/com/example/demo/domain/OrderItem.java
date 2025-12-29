@@ -3,6 +3,9 @@ package com.example.demo.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "order_item")
 @Builder
@@ -25,8 +28,10 @@ public class OrderItem {
     private Item item;
 
     @Column
-    private int orderPrice;
+    private Integer count;
 
     @Column
-    private int count;
+    private Integer orderPrice;
+
+
 }
