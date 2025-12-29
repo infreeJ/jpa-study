@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Item;
 import com.example.demo.dto.request.ItemRegistrationRequest;
 import com.example.demo.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class ItemService {
 
     public void Registration(ItemRegistrationRequest itemRegistrationRequest) {
 
-
+        Item item = itemRegistrationRequest.toEntity();
+        itemRepository.save(item);
     }
 }

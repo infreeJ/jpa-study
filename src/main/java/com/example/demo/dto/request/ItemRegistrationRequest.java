@@ -10,7 +10,7 @@ public class ItemRegistrationRequest {
     private int price;
     private int stockQuantity;
 
-    public Item toEntity(ItemRegistrationRequest itemRegistrationRequest) {
+    public Item toEntity() {
         return Item.builder()
                 .name(this.name)
                 .price(this.price)
