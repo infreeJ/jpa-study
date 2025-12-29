@@ -3,6 +3,9 @@ package com.example.demo.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "order_item")
 @Builder
@@ -22,11 +25,15 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private Item item;
+    private List<Item> item = new ArrayList<>();
 
     @Column
-    private int orderPrice;
+    private List<Integer> count = new ArrayList<>();
 
     @Column
-    private int count;
+    private List<Integer> orderPrice = new ArrayList<>();
+
+    @Column
+    private int totalPrice;
+
 }
