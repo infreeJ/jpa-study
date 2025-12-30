@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Order {
+public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +32,6 @@ public class Order {
 
     @Column
     private int totalPrice;
-
-    @Column
-    @CreatedDate
-    private LocalDateTime orderDate;
 
     @Column
     @Enumerated(EnumType.STRING)
