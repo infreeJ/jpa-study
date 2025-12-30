@@ -13,13 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column
+    @Column(nullable = false, length = 20)
     private String name;
 
     @Column
