@@ -38,7 +38,10 @@ public class OrderService {
             Item item = itemRepository.findById(orderRequest.getItemId().get(i))
                     .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
 
-            int orderPrice = orderRequest.getCount().get(i) * item.getPrice();
+            int count = orderRequest.getCount().get(i);
+            item.decrease(count);
+
+            int orderPrice = count * item.getPrice();
             totalPrice += orderPrice;
 
             OrderItem orderItem = OrderItem.builder()
