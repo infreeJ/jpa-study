@@ -24,4 +24,16 @@ public class Item extends BaseTimeEntity {
 
     @Column
     private int stockQuantity;
+
+    public void decrease(int count) {
+        if(stockQuantity >= count) {
+            this.stockQuantity -= count;
+        } else {
+            throw new RuntimeException("재고가 부족합니다.");
+        }
+    }
+
+    public void increase(int count) {
+        this.stockQuantity += count;
+    }
 }

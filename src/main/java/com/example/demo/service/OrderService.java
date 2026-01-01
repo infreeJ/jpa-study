@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.Item;
-import com.example.demo.domain.Member;
-import com.example.demo.domain.Order;
-import com.example.demo.domain.OrderItem;
+import com.example.demo.domain.*;
 import com.example.demo.dto.request.OrderRequest;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.MemberRepository;
@@ -11,6 +8,8 @@ import com.example.demo.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,10 @@ public class OrderService {
             Item item = itemRepository.findById(orderRequest.getItemId().get(i))
                     .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
 
-            int orderPrice = orderRequest.getCount().get(i) * item.getPrice();
+            int count = orderRequest.getCount().get(i);
+            item.decrease(count);
+
+            int orderPrice = count * item.getPrice();
             totalPrice += orderPrice;
 
             OrderItem orderItem = OrderItem.builder()
@@ -54,4 +56,25 @@ public class OrderService {
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
     }
+
+    public void cancel(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
+
+        order.updateStatus(Status.CANCEL);
+
+        List<OrderItem> orderItems = order.getOrderItems();
+
+        for (int i = 0; i < orderItems.size(); i++) {
+            OrderItem orderItem = orderItems.get(i);
+
+            int count = orderItem.getCount();
+
+            Item item = orderItem.getItem();
+            item.increase(count);
+        }
+    }
 }
+
+
+

@@ -1,5 +1,5 @@
 package com.example.demo.domain;
 
 public enum Status {
-    PAYMENT, SHIPPING, DELIVERY
+    PAYMENT, SHIPPING, DELIVERY, CANCEL
 }
