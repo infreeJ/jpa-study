@@ -32,4 +32,8 @@ public class Item extends BaseTimeEntity {
             throw new RuntimeException("재고가 부족합니다.");
         }
     }
+
+    public void increase(int count) {
+        this.stockQuantity += count;
+    }
 }
