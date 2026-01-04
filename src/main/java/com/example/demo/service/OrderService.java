@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.domain.*;
 import com.example.demo.dto.request.OrderRequest;
+import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.repository.ItemRepository;
 import com.example.demo.repository.MemberRepository;
 import com.example.demo.repository.OrderRepository;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -73,6 +75,19 @@ public class OrderService {
             Item item = orderItem.getItem();
             item.increase(count);
         }
+    }
+
+    public List<OrderResponse> findMemberOrders(Long memberId) {
+
+        List<Order> orders = orderRepository.findAllByMember_MemberId(memberId);
+
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for(Order order : orders) {
+            OrderResponse orderResponse = OrderResponse.from(order);
+            orderResponseList.add(orderResponse);
+        }
+
+        return orderResponseList;
     }
 }
 
