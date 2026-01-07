@@ -24,11 +24,11 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
 
-    @Retryable(
-            retryFor = {ObjectOptimisticLockingFailureException.class},
-            maxAttempts = 8,
-            backoff = @Backoff(delay = 500)
-    )
+//    @Retryable(
+//            retryFor = {ObjectOptimisticLockingFailureException.class},
+//            maxAttempts = 8,
+//            backoff = @Backoff(delay = 500)
+//    )
     @Transactional
     public void order(OrderRequest orderRequest) {
 
@@ -40,11 +40,11 @@ public class OrderService {
                 .totalPrice(0)
                 .build();
 
-
         int totalPrice = 0;
 
         for (int i = 0; i < orderRequest.getItemId().size(); i++) {
-            Item item = itemRepository.findById(orderRequest.getItemId().get(i))
+//            Item item = itemRepository.findById(orderRequest.getItemId().get(i))
+            Item item = itemRepository.findByIdWithPessimisticLock(orderRequest.getItemId().get(i))
                     .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
 
             int count = orderRequest.getCount().get(i);
