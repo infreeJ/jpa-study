@@ -10,8 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +31,21 @@ public class OrderService {
                 .totalPrice(0)
                 .build();
 
-
         int totalPrice = 0;
 
-        for (int i = 0; i < orderRequest.getItemId().size(); i++) {
-            Item item = itemRepository.findById(orderRequest.getItemId().get(i))
+        Map<Long, Integer> orderMap = new HashMap<>();
+        for(int i = 0; i < orderRequest.getItemId().size(); i++) {
+            orderMap.put(orderRequest.getItemId().get(i), orderRequest.getCount().get(i));
+        }
+
+        List<Long> sortedItemIds = new ArrayList<>(orderMap.keySet());
+        sortedItemIds.sort(Comparator.naturalOrder());
+
+        for (Long itemId : sortedItemIds) {
+            Item item = itemRepository.findByIdWithPessimisticLock(itemId)
                     .orElseThrow(() -> new IllegalArgumentException("상품 정보를 찾을 수 없습니다."));
 
-            int count = orderRequest.getCount().get(i);
+            int count = orderMap.get(itemId);
             item.decrease(count);
 
             int orderPrice = count * item.getPrice();
@@ -49,7 +55,7 @@ public class OrderService {
                     .order(order)
                     .item(item)
                     .orderPrice(orderPrice)
-                    .count(orderRequest.getCount().get(i))
+                    .count(count)
                     .build();
 
             order.addOrderItem(orderItem);
@@ -59,6 +65,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional
     public void cancel(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
@@ -77,8 +84,8 @@ public class OrderService {
         }
     }
 
+    @Transactional
     public List<OrderResponse> findMemberOrders(Long memberId) {
-
         List<Order> orders = orderRepository.findAllByMember_MemberId(memberId);
 
         List<OrderResponse> orderResponseList = new ArrayList<>();
@@ -90,18 +97,18 @@ public class OrderService {
         return orderResponseList;
     }
 
-//    public List<OrderResponse> findMemberOrders(Long memberId) {
-//
-//        List<Order> orders = orderRepository.findAllByMember_MemberId(memberId);
-//
-//        List<OrderResponse> orderResponseList = new ArrayList<>();
-//        for(Order order : orders) {
-//            OrderResponse orderResponse = OrderResponse.from(order);
-//            orderResponseList.add(orderResponse);
-//        }
-//
-//        return orderResponseList;
-//    }
+    @Transactional
+    public List<OrderResponse> searchOrders(String name, Status status) {
+        List<Order> orders = orderRepository.searchOrders(name, status);
+
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for(Order order : orders) {
+            OrderResponse orderResponse = OrderResponse.from(order);
+            orderResponseList.add(orderResponse);
+        }
+
+        return orderResponseList;
+    }
 }
 
 
