@@ -59,6 +59,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional
     public void cancel(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("주문 정보를 찾을 수 없습니다."));
@@ -77,6 +78,7 @@ public class OrderService {
         }
     }
 
+    @Transactional
     public List<OrderResponse> findMemberOrders(Long memberId) {
         List<Order> orders = orderRepository.findAllByMember_MemberId(memberId);
 
@@ -89,6 +91,7 @@ public class OrderService {
         return orderResponseList;
     }
 
+    @Transactional
     public List<OrderResponse> searchOrders(String name, Status status) {
         List<Order> orders = orderRepository.searchOrders(name, status);
 
