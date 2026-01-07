@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.OrderRequest;
+import com.example.demo.dto.request.OrderSearchRequest;
 import com.example.demo.dto.response.OrderResponse;
 import com.example.demo.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,11 @@ public class OrderController {
     @GetMapping("/orders/{memberId}")
     public List<OrderResponse> findMemberOrders(@PathVariable Long memberId) {
         return orderService.findMemberOrders(memberId);
+    }
+
+    @GetMapping("/order/search")
+    public List<OrderResponse> searchOrders(@ModelAttribute OrderSearchRequest orderSearchRequest) {
+        return orderService.searchOrders(orderSearchRequest.getName(), orderSearchRequest.getStatus());
     }
 
 }

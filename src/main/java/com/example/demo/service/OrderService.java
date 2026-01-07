@@ -78,7 +78,6 @@ public class OrderService {
     }
 
     public List<OrderResponse> findMemberOrders(Long memberId) {
-
         List<Order> orders = orderRepository.findAllByMember_MemberId(memberId);
 
         List<OrderResponse> orderResponseList = new ArrayList<>();
@@ -90,18 +89,17 @@ public class OrderService {
         return orderResponseList;
     }
 
-//    public List<OrderResponse> findMemberOrders(Long memberId) {
-//
-//        List<Order> orders = orderRepository.findAllByMember_MemberId(memberId);
-//
-//        List<OrderResponse> orderResponseList = new ArrayList<>();
-//        for(Order order : orders) {
-//            OrderResponse orderResponse = OrderResponse.from(order);
-//            orderResponseList.add(orderResponse);
-//        }
-//
-//        return orderResponseList;
-//    }
+    public List<OrderResponse> searchOrders(String name, Status status) {
+        List<Order> orders = orderRepository.searchOrders(name, status);
+
+        List<OrderResponse> orderResponseList = new ArrayList<>();
+        for(Order order : orders) {
+            OrderResponse orderResponse = OrderResponse.from(order);
+            orderResponseList.add(orderResponse);
+        }
+
+        return orderResponseList;
+    }
 }
 
 
