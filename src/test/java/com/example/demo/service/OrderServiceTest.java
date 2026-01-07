@@ -81,6 +81,8 @@ class OrderServiceTest {
                 try {
                     // 1개 주문 시도
                     orderService.order(orderRequest);
+                } catch (Exception e) {
+                    System.out.println("충돌 발생 : " + e.getClass().getName());
                 } finally {
                     latch.countDown(); // 작업이 끝나면 카운트 1 감소
                 }
